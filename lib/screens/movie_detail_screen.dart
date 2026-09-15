@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import '../models/movie.dart';
-import '../widgets/app_footer.dart';
-import '../widgets/app_navbar.dart';
+import '../widgets/app_shell.dart';
+import 'seat_selection_screen.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   final Movie movie;
@@ -38,19 +38,17 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // ============================================================
-  // LẤY YOUTUBE VIDEO ID
+  // YOUTUBE VIDEO ID
   // ============================================================
 
   String? _getYoutubeVideoId(String url) {
     try {
       final uri = Uri.parse(url);
 
-      // youtube.com/watch?v=xxxxx
       if (uri.host.contains('youtube.com')) {
         return uri.queryParameters['v'];
       }
 
-      // youtu.be/xxxxx
       if (uri.host.contains('youtu.be')) {
         if (uri.pathSegments.isNotEmpty) {
           return uri.pathSegments.first;
@@ -62,7 +60,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // ============================================================
-  // INIT YOUTUBE
+  // INIT
   // ============================================================
 
   @override
@@ -99,43 +97,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0A0A0A),
-              Color(0xFF1A1A2E),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          bottom: false,
-          child: Column(
-            children: [
-              AppNavbar(
-                onHome: widget.onGoHome,
-                onNowShowing: widget.onGoNowShowing,
-                onComingSoon: widget.onGoComingSoon,
-              ),
-
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildPageContent(context),
-                      const AppFooter(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return AppShell(
+      onHome: widget.onGoHome,
+      onNowShowing: widget.onGoNowShowing,
+      onComingSoon: widget.onGoComingSoon,
+      child: _buildPageContent(context),
     );
   }
 
@@ -154,7 +120,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             16,
             24,
             16,
-            0,
+            24,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +129,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
               const SizedBox(height: 32),
 
-              _buildMovieDetails(context),
+              _buildMovieDetails(),
 
               const SizedBox(height: 48),
 
@@ -173,8 +139,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
               if (widget.movie.trailerUrl.isNotEmpty)
                 _buildTrailer(),
-
-              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -191,24 +155,47 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       width: double.infinity,
       height: 420,
       decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: AssetImage(widget.movie.posterUrl),
-          fit: BoxFit.cover,
-          alignment: Alignment.center,
-        ),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromRGBO(0, 0, 0, 0.5),
-              Color.fromRGBO(0, 0, 0, 0.7),
-            ],
-          ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              widget.movie.posterUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (
+                context,
+                error,
+                stackTrace,
+              ) {
+                return Container(
+                  color: const Color(0xFF1A1A1A),
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.movie_outlined,
+                    size: 80,
+                    color: Colors.white24,
+                  ),
+                );
+              },
+            ),
+
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.fromRGBO(0, 0, 0, 0.5),
+                    Color.fromRGBO(0, 0, 0, 0.7),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -218,7 +205,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // MOVIE DETAILS
   // ============================================================
 
-  Widget _buildMovieDetails(BuildContext context) {
+  Widget _buildMovieDetails() {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isDesktop = constraints.maxWidth >= 768;
@@ -381,8 +368,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             TextSpan(
               text: '$label: ',
               style: const TextStyle(
-                fontWeight: FontWeight.w700,
                 color: Colors.white,
+                fontWeight: FontWeight.w700,
               ),
             ),
             TextSpan(
@@ -529,14 +516,25 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // SHOWTIME BUTTON
   // ============================================================
 
-  Widget _buildShowtimeButton(
-    String time,
-  ) {
+  Widget _buildShowtimeButton(String time) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(6),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => SeatSelectionScreen(
+              showtimeId: 122,
+              ticketPrice: 100000,
+              onGoHome: widget.onGoHome,
+              onGoNowShowing: widget.onGoNowShowing,
+              onGoComingSoon: widget.onGoComingSoon,
+            ),
+            ),
+          );
+        },
         child: Container(
           constraints: const BoxConstraints(
             minWidth: 90,
@@ -545,11 +543,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             horizontal: 16,
             vertical: 10,
           ),
-          decoration: const BoxDecoration(
-            color: Color(0xFFE50914),
-            borderRadius: BorderRadius.all(
-              Radius.circular(6),
-            ),
+          decoration: BoxDecoration(
+            color: const Color(0xFFE50914),
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFE50914).withOpacity(0.25),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
           child: Text(
             time,
@@ -611,9 +614,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // SECTION TITLE
   // ============================================================
 
-  Widget _buildSectionTitle(
-    String title,
-  ) {
+  Widget _buildSectionTitle(String title) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -631,16 +632,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         Container(
           width: 60,
           height: 4,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
               colors: [
                 Color(0xFFE50914),
                 Color(0xFFF40612),
               ],
             ),
-            borderRadius: BorderRadius.all(
-              Radius.circular(2),
-            ),
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
       ],
