@@ -7,6 +7,8 @@ import '../widgets/app_navbar.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/movie_section.dart';
 import 'movie_detail_screen.dart';
+import 'login_screen.dart';
+import 'register_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -49,10 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // MỞ CHI TIẾT PHIM
   // ============================================================
 
-  void _openMovieDetail(
-    BuildContext context,
-    Movie movie,
-  ) {
+  void _openMovieDetail(BuildContext context, Movie movie) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -63,45 +62,44 @@ class _HomeScreenState extends State<HomeScreen> {
           onGoHome: () {
             Navigator.pop(context);
 
-            Future.delayed(
-              const Duration(milliseconds: 100),
-              () {
-                if (!mounted) return;
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (!mounted) return;
 
-                _scrollToSection(_homeKey);
-              },
-            );
+              _scrollToSection(_homeKey);
+            });
           },
 
           // Phim đang chiếu
           onGoNowShowing: () {
             Navigator.pop(context);
 
-            Future.delayed(
-              const Duration(milliseconds: 100),
-              () {
-                if (!mounted) return;
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (!mounted) return;
 
-                _scrollToSection(_nowShowingKey);
-              },
-            );
+              _scrollToSection(_nowShowingKey);
+            });
           },
 
           // Phim sắp chiếu
           onGoComingSoon: () {
             Navigator.pop(context);
 
-            Future.delayed(
-              const Duration(milliseconds: 100),
-              () {
-                if (!mounted) return;
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (!mounted) return;
 
-                _scrollToSection(_comingSoonKey);
-              },
-            );
+              _scrollToSection(_comingSoonKey);
+            });
           },
         ),
       ),
+    );
+  }
+
+  void _handleLoggedOut() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      LoginScreen.routeName,
+      (route) => route.isFirst,
     );
   }
 
@@ -111,11 +109,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final nowShowing =
-        movies.where((movie) => !movie.isComingSoon).toList();
+    final nowShowing = movies.where((movie) => !movie.isComingSoon).toList();
 
-    final comingSoon =
-        movies.where((movie) => movie.isComingSoon).toList();
+    final comingSoon = movies.where((movie) => movie.isComingSoon).toList();
 
     final heroMovie = movies.firstWhere(
       (movie) => movie.posterUrl.isNotEmpty,
@@ -135,9 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: _scrollController,
             slivers: [
               // Khoảng trống cho navbar fixed
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 70),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 70)),
 
               SliverToBoxAdapter(
                 child: _HomeContent(
@@ -148,10 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   nowShowing: nowShowing,
                   comingSoon: comingSoon,
                   onMovieTap: (movie) {
-                    _openMovieDetail(
-                      context,
-                      movie,
-                    );
+                    _openMovieDetail(context, movie);
                   },
                 ),
               ),
@@ -161,7 +152,6 @@ class _HomeScreenState extends State<HomeScreen> {
           // ======================================================
           // NAVBAR FIXED
           // ======================================================
-
           Positioned(
             top: 0,
             left: 0,
@@ -181,6 +171,13 @@ class _HomeScreenState extends State<HomeScreen> {
               onComingSoon: () {
                 _scrollToSection(_comingSoonKey);
               },
+              onLogin: () {
+                Navigator.pushNamed(context, LoginScreen.routeName);
+              },
+              onRegister: () {
+                Navigator.pushNamed(context, RegisterScreen.routeName);
+              },
+              onLoggedOut: _handleLoggedOut,
             ),
           ),
         ],
@@ -227,10 +224,7 @@ class _HomeContent extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF0A0A0A),
-            Color(0xFF1A1A2E),
-          ],
+          colors: [Color(0xFF0A0A0A), Color(0xFF1A1A2E)],
         ),
       ),
 
@@ -242,9 +236,7 @@ class _HomeContent extends StatelessWidget {
 
           Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 1320,
-              ),
+              constraints: const BoxConstraints(maxWidth: 1320),
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
                   isMobile ? 14 : 24,
@@ -266,12 +258,9 @@ class _HomeContent extends StatelessWidget {
           // ======================================================
           // MOVIE SECTIONS
           // ======================================================
-
           Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 1320,
-              ),
+              constraints: const BoxConstraints(maxWidth: 1320),
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
                   isMobile ? 14 : 24,
@@ -299,7 +288,6 @@ class _HomeContent extends StatelessWidget {
                     // ==================================================
                     // PHIM SẮP CHIẾU
                     // ==================================================
-
                     Container(
                       key: comingSoonKey,
                       child: MovieSection(
@@ -317,7 +305,6 @@ class _HomeContent extends StatelessWidget {
           // ======================================================
           // FOOTER
           // ======================================================
-
           const AppFooter(),
         ],
       ),

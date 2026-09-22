@@ -1,0 +1,30 @@
+{
+  "auth": {
+    "providers": {
+      "emailPassword": true
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "metacinema-tung-20260922",
+          "appId": "1:440980593389:android:2713f8e8d3c6ac2ce60ae4",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "metacinema-tung-20260922",
+          "configurations": {
+            "android": "1:440980593389:android:2713f8e8d3c6ac2ce60ae4",
+            "web": "1:440980593389:web:03b217130d656109e60ae4"
+          }
+        }
+      }
+    }
+  }
+}

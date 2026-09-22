@@ -1,8 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'firebase_options.dart';
+import 'screens/account_screens.dart';
+import 'screens/admin/admin_dashboard_screen.dart';
+import 'screens/admin/admin_users_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/register_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MetaCinemaApp());
 }
 
@@ -25,6 +35,15 @@ class MetaCinemaApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomeScreen(),
+      routes: {
+        LoginScreen.routeName: (_) => const LoginScreen(),
+        RegisterScreen.routeName: (_) => const RegisterScreen(),
+        BookingHistoryScreen.routeName: (_) => const BookingHistoryScreen(),
+        UserStatsScreen.routeName: (_) => const UserStatsScreen(),
+        ProfileScreen.routeName: (_) => const ProfileScreen(),
+        AdminDashboardScreen.routeName: (_) => const AdminDashboardScreen(),
+        AdminUsersScreen.routeName: (_) => const AdminUsersScreen(),
+      },
     );
   }
 }

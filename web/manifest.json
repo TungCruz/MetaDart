@@ -1,6 +1,6 @@
 {
-    "name": "calculator_app",
-    "short_name": "calculator_app",
+    "name": "MetaCinema",
+    "short_name": "MetaCinema",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
