@@ -67,9 +67,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   void initState() {
     super.initState();
 
-    final videoId = _getYoutubeVideoId(
-      widget.movie.trailerUrl,
-    );
+    final videoId = _getYoutubeVideoId(widget.movie.trailerUrl);
 
     if (videoId != null && videoId.isNotEmpty) {
       _youtubeController = YoutubePlayerController.fromVideoId(
@@ -112,16 +110,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   Widget _buildPageContent(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: 1200,
-        ),
+        constraints: const BoxConstraints(maxWidth: 1200),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            16,
-            24,
-            16,
-            24,
-          ),
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -137,8 +128,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
               const SizedBox(height: 32),
 
-              if (widget.movie.trailerUrl.isNotEmpty)
-                _buildTrailer(),
+              if (widget.movie.trailerUrl.isNotEmpty) _buildTrailer(),
             ],
           ),
         ),
@@ -166,11 +156,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             Image.asset(
               widget.movie.posterUrl,
               fit: BoxFit.cover,
-              errorBuilder: (
-                context,
-                error,
-                stackTrace,
-              ) {
+              errorBuilder: (context, error, stackTrace) {
                 return Container(
                   color: const Color(0xFF1A1A1A),
                   alignment: Alignment.center,
@@ -218,9 +204,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
               const SizedBox(width: 24),
 
-              Expanded(
-                child: _buildMovieInformation(),
-              ),
+              Expanded(child: _buildMovieInformation()),
             ],
           );
         }
@@ -228,9 +212,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: _buildPoster(),
-            ),
+            Center(child: _buildPoster()),
 
             const SizedBox(height: 24),
 
@@ -255,11 +237,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           child: Image.asset(
             widget.movie.posterUrl,
             fit: BoxFit.cover,
-            errorBuilder: (
-              context,
-              error,
-              stackTrace,
-            ) {
+            errorBuilder: (context, error, stackTrace) {
               return Container(
                 color: const Color(0xFF1A1A1A),
                 alignment: Alignment.center,
@@ -296,40 +274,19 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
         const SizedBox(height: 24),
 
-        _buildInfoRow(
-          'Đạo diễn',
-          widget.movie.director,
-        ),
+        _buildInfoRow('Đạo diễn', widget.movie.director),
 
-        _buildInfoRow(
-          'Diễn viên chính',
-          widget.movie.actors,
-        ),
+        _buildInfoRow('Diễn viên chính', widget.movie.actors),
 
-        _buildInfoRow(
-          'Thể loại',
-          widget.movie.genres.join(', '),
-        ),
+        _buildInfoRow('Thể loại', widget.movie.genres.join(', ')),
 
-        _buildInfoRow(
-          'Khởi chiếu',
-          _formatDate(widget.movie.releaseDate),
-        ),
+        _buildInfoRow('Khởi chiếu', _formatDate(widget.movie.releaseDate)),
 
-        _buildInfoRow(
-          'Thời lượng',
-          '${widget.movie.duration} phút',
-        ),
+        _buildInfoRow('Thời lượng', '${widget.movie.duration} phút'),
 
-        _buildInfoRow(
-          'Ngôn ngữ',
-          widget.movie.language,
-        ),
+        _buildInfoRow('Ngôn ngữ', widget.movie.language),
 
-        _buildInfoRow(
-          'Rated',
-          widget.movie.rating,
-        ),
+        _buildInfoRow('Rated', widget.movie.rating),
 
         const SizedBox(height: 14),
 
@@ -349,14 +306,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // INFO ROW
   // ============================================================
 
-  Widget _buildInfoRow(
-    String label,
-    String value,
-  ) {
+  Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(
-        bottom: 12,
-      ),
+      padding: const EdgeInsets.only(bottom: 12),
       child: RichText(
         text: TextSpan(
           style: const TextStyle(
@@ -374,9 +326,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             ),
             TextSpan(
               text: value,
-              style: const TextStyle(
-                color: Colors.white,
-              ),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -415,9 +365,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
                   const SizedBox(height: 8),
 
-                  _buildDateDropdown(
-                    width: constraints.maxWidth,
-                  ),
+                  _buildDateDropdown(width: constraints.maxWidth),
                 ],
               );
             }
@@ -435,9 +383,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
                 const SizedBox(width: 10),
 
-                _buildDateDropdown(
-                  width: 220,
-                ),
+                _buildDateDropdown(width: 220),
               ],
             );
           },
@@ -455,9 +401,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             '16:30',
             '19:00',
             '21:30',
-          ].map(
-            (time) => _buildShowtimeButton(time),
-          ).toList(),
+          ].map((time) => _buildShowtimeButton(time)).toList(),
         ),
       ],
     );
@@ -467,45 +411,26 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // DATE DROPDOWN
   // ============================================================
 
-  Widget _buildDateDropdown({
-    required double width,
-  }) {
-    final date = _formatDate(
-      widget.movie.releaseDate,
-    );
+  Widget _buildDateDropdown({required double width}) {
+    final date = _formatDate(widget.movie.releaseDate);
 
     return Container(
       width: width,
       height: 42,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: const Color(0xFF2A2A2A),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-          color: const Color(0xFF444444),
-        ),
+        border: Border.all(color: const Color(0xFF444444)),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: date,
           isExpanded: true,
           dropdownColor: const Color(0xFF252525),
-          icon: const Icon(
-            Icons.keyboard_arrow_down,
-            color: Colors.white70,
-          ),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-          items: [
-            DropdownMenuItem(
-              value: date,
-              child: Text(date),
-            ),
-          ],
+          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white70),
+          style: const TextStyle(color: Colors.white, fontSize: 14),
+          items: [DropdownMenuItem(value: date, child: Text(date))],
           onChanged: (_) {},
         ),
       ),
@@ -526,23 +451,18 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             context,
             MaterialPageRoute(
               builder: (_) => SeatSelectionScreen(
-              showtimeId: 122,
-              ticketPrice: 100000,
-              onGoHome: widget.onGoHome,
-              onGoNowShowing: widget.onGoNowShowing,
-              onGoComingSoon: widget.onGoComingSoon,
-            ),
+                showtimeId: 122,
+                ticketPrice: 100000,
+                onGoHome: widget.onGoHome,
+                onGoNowShowing: widget.onGoNowShowing,
+                onGoComingSoon: widget.onGoComingSoon,
+              ),
             ),
           );
         },
         child: Container(
-          constraints: const BoxConstraints(
-            minWidth: 90,
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 10,
-          ),
+          constraints: const BoxConstraints(minWidth: 90),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             color: const Color(0xFFE50914),
             borderRadius: BorderRadius.circular(6),
@@ -578,9 +498,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     if (controller == null) {
       return const Text(
         'Không thể tải trailer.',
-        style: TextStyle(
-          color: Colors.white70,
-        ),
+        style: TextStyle(color: Colors.white70),
       );
     }
 
@@ -594,15 +512,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         Align(
           alignment: Alignment.centerLeft,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 720,
-            ),
+            constraints: const BoxConstraints(maxWidth: 720),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: YoutubePlayer(
-                controller: controller,
-                aspectRatio: 16 / 9,
-              ),
+              child: YoutubePlayer(controller: controller, aspectRatio: 16 / 9),
             ),
           ),
         ),
@@ -634,10 +547,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           height: 4,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [
-                Color(0xFFE50914),
-                Color(0xFFF40612),
-              ],
+              colors: [Color(0xFFE50914), Color(0xFFF40612)],
             ),
             borderRadius: BorderRadius.circular(2),
           ),

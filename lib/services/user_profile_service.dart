@@ -60,6 +60,8 @@ class UserProfileService {
         'email': email.trim().toLowerCase(),
         'phone': phone.trim(),
         'age': age,
+        'role': 'user',
+        'status': 'active',
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 

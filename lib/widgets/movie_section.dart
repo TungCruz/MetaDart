@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/movie.dart';
 import 'movie_card.dart';
 
@@ -37,10 +38,7 @@ class MovieSection extends StatelessWidget {
           height: 4,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [
-                Color(0xFFE50914),
-                Color(0xFFF40612),
-              ],
+              colors: [Color(0xFFE50914), Color(0xFFF40612)],
             ),
             borderRadius: BorderRadius.circular(2),
           ),
@@ -65,8 +63,7 @@ class MovieSection extends StatelessWidget {
             const spacing = 32.0;
 
             final cardWidth =
-                (width - spacing * (crossAxisCount - 1)) /
-                    crossAxisCount;
+                (width - spacing * (crossAxisCount - 1)) / crossAxisCount;
 
             final posterHeight = cardWidth * 330 / 220;
             final cardHeight = posterHeight + 165;
@@ -86,10 +83,7 @@ class MovieSection extends StatelessWidget {
               itemBuilder: (context, index) {
                 final movie = movies[index];
 
-                return MovieCard(
-                  movie: movie,
-                  onTap: () => onMovieTap(movie),
-                );
+                return MovieCard(movie: movie, onTap: () => onMovieTap(movie));
               },
             );
           },

@@ -6,9 +6,14 @@ class Booking {
   final List<String> seats;
   final List<FoodAndDrinkOrderItem> concessions;
 
-  const Booking({required this.movie, required this.seats, this.concessions = const []});
+  const Booking({
+    required this.movie,
+    required this.seats,
+    this.concessions = const [],
+  });
 
   int get ticketTotal => seats.length * 90000;
-  int get concessionTotal => concessions.fold(0, (sum, item) => sum + item.total);
+  int get concessionTotal =>
+      concessions.fold(0, (sum, item) => sum + item.total);
   int get total => ticketTotal + concessionTotal;
 }

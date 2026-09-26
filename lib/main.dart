@@ -5,10 +5,10 @@ import 'firebase_options.dart';
 import 'screens/account_screens.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/admin/admin_users_screen.dart';
+import 'screens/change_password_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/profile_screen.dart';
-import 'screens/register_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,12 +37,12 @@ class MetaCinemaApp extends StatelessWidget {
       home: const HomeScreen(),
       routes: {
         LoginScreen.routeName: (_) => const LoginScreen(),
-        RegisterScreen.routeName: (_) => const RegisterScreen(),
         BookingHistoryScreen.routeName: (_) => const BookingHistoryScreen(),
         UserStatsScreen.routeName: (_) => const UserStatsScreen(),
         ProfileScreen.routeName: (_) => const ProfileScreen(),
         AdminDashboardScreen.routeName: (_) => const AdminDashboardScreen(),
         AdminUsersScreen.routeName: (_) => const AdminUsersScreen(),
+        ChangePasswordScreen.routeName: (_) => const ChangePasswordScreen(),
       },
     );
   }

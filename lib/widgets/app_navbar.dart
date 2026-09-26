@@ -87,8 +87,10 @@ class AppNavbar extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          _registerButton(),
+          if (onRegister != null) ...[
+            const SizedBox(width: 8),
+            _registerButton(),
+          ],
         ] else ...[
           _accountMenu(context, user),
           const SizedBox(width: 14),
@@ -160,7 +162,8 @@ class AppNavbar extends StatelessWidget {
             const PopupMenuDivider(),
             if (user == null) ...[
               _menuItem('login', Icons.login_outlined, 'Đăng nhập'),
-              _menuItem('register', Icons.person_add_outlined, 'Đăng ký'),
+              if (onRegister != null)
+                _menuItem('register', Icons.person_add_outlined, 'Đăng ký'),
             ] else ...[
               PopupMenuItem<String>(
                 enabled: false,
@@ -182,8 +185,6 @@ class AppNavbar extends StatelessWidget {
     try {
       await authService.signOut();
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Đăng xuất thành công.')));
       if (onLoggedOut != null) {
         onLoggedOut!.call();
       } else {
@@ -195,8 +196,7 @@ class AppNavbar extends StatelessWidget {
       }
     } catch (error) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(authService.messageFor(error))));
+      debugPrint('Logout: ${authService.messageFor(error)}');
     }
   }
 

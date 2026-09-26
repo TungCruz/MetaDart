@@ -8,7 +8,6 @@ import '../widgets/hero_banner.dart';
 import '../widgets/movie_section.dart';
 import 'movie_detail_screen.dart';
 import 'login_screen.dart';
-import 'register_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -121,66 +120,67 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
 
-      body: Stack(
-        children: [
-          // ======================================================
-          // MAIN SCROLL
-          // ======================================================
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: [
+            // ======================================================
+            // MAIN SCROLL
+            // ======================================================
 
-          CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              // Khoảng trống cho navbar fixed
-              const SliverToBoxAdapter(child: SizedBox(height: 70)),
+            CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                // Khoảng trống cho navbar fixed
+                const SliverToBoxAdapter(child: SizedBox(height: 70)),
 
-              SliverToBoxAdapter(
-                child: _HomeContent(
-                  homeKey: _homeKey,
-                  nowShowingKey: _nowShowingKey,
-                  comingSoonKey: _comingSoonKey,
-                  heroMovie: heroMovie,
-                  nowShowing: nowShowing,
-                  comingSoon: comingSoon,
-                  onMovieTap: (movie) {
-                    _openMovieDetail(context, movie);
-                  },
+                SliverToBoxAdapter(
+                  child: _HomeContent(
+                    homeKey: _homeKey,
+                    nowShowingKey: _nowShowingKey,
+                    comingSoonKey: _comingSoonKey,
+                    heroMovie: heroMovie,
+                    nowShowing: nowShowing,
+                    comingSoon: comingSoon,
+                    onMovieTap: (movie) {
+                      _openMovieDetail(context, movie);
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-
-          // ======================================================
-          // NAVBAR FIXED
-          // ======================================================
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: AppNavbar(
-              // Trang chủ
-              onHome: () {
-                _scrollToSection(_homeKey);
-              },
-
-              // Phim đang chiếu
-              onNowShowing: () {
-                _scrollToSection(_nowShowingKey);
-              },
-
-              // Phim sắp chiếu
-              onComingSoon: () {
-                _scrollToSection(_comingSoonKey);
-              },
-              onLogin: () {
-                Navigator.pushNamed(context, LoginScreen.routeName);
-              },
-              onRegister: () {
-                Navigator.pushNamed(context, RegisterScreen.routeName);
-              },
-              onLoggedOut: _handleLoggedOut,
+              ],
             ),
-          ),
-        ],
+
+            // ======================================================
+            // NAVBAR FIXED
+            // ======================================================
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AppNavbar(
+                // Trang chủ
+                onHome: () {
+                  _scrollToSection(_homeKey);
+                },
+
+                // Phim đang chiếu
+                onNowShowing: () {
+                  _scrollToSection(_nowShowingKey);
+                },
+
+                // Phim sắp chiếu
+                onComingSoon: () {
+                  _scrollToSection(_comingSoonKey);
+                },
+                onLogin: () {
+                  Navigator.pushNamed(context, LoginScreen.routeName);
+                },
+                onRegister: null,
+                onLoggedOut: _handleLoggedOut,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

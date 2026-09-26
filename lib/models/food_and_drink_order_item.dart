@@ -13,5 +13,6 @@ class FoodAndDrinkOrderItem {
 
   int get unitPrice => size?.price ?? item.price;
   int get total => unitPrice * quantity;
-  String get displayName => size == null ? item.name : '${item.name} · ${size!.name}';
+  String get displayName =>
+      size == null ? item.name : '${item.name} · ${size!.name}';
 }

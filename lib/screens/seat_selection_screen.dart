@@ -23,8 +23,7 @@ class SeatSelectionScreen extends StatefulWidget {
   });
 
   @override
-  State<SeatSelectionScreen> createState() =>
-      _SeatSelectionScreenState();
+  State<SeatSelectionScreen> createState() => _SeatSelectionScreenState();
 }
 
 class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
@@ -46,16 +45,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   List<Seat> _createDemoSeats() {
     final List<Seat> result = [];
 
-    const rows = [
-      'A',
-      'B',
-      'C',
-      'D',
-      'E',
-      'F',
-      'G',
-      'H',
-    ];
+    const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
     for (final row in rows) {
       for (int number = 1; number <= 10; number++) {
@@ -83,9 +73,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   // ============================================================
 
   List<Seat> _getRowSeats(String row) {
-    return seats
-        .where((seat) => seat.code.startsWith(row))
-        .toList();
+    return seats.where((seat) => seat.code.startsWith(row)).toList();
   }
 
   // ============================================================
@@ -119,10 +107,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   }
 
   String _formatPrice(int price) {
-    return '${price.toString().replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (match) => '${match.group(1)}.',
-        )}đ';
+    return '${price.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => '${match.group(1)}.')}đ';
   }
 
   // ============================================================
@@ -135,10 +120,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       return;
     }
 
-    Navigator.popUntil(
-      context,
-      (route) => route.isFirst,
-    );
+    Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   // ============================================================
@@ -151,10 +133,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       return;
     }
 
-    Navigator.popUntil(
-      context,
-      (route) => route.isFirst,
-    );
+    Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   // ============================================================
@@ -167,10 +146,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       return;
     }
 
-    Navigator.popUntil(
-      context,
-      (route) => route.isFirst,
-    );
+    Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   // ============================================================
@@ -180,20 +156,11 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   void _continueBooking() {
     // Không có ghế
     if (selectedSeats.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Vui lòng chọn ít nhất một ghế.',
-          ),
-        ),
-      );
-
       return;
     }
 
     // Sắp xếp ghế
-    final List<String> sortedSeats =
-        selectedSeats.toList()..sort();
+    final List<String> sortedSeats = selectedSeats.toList()..sort();
 
     // Debug để kiểm tra
     debugPrint('======================================');
@@ -235,10 +202,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0A0A0A),
-              Color(0xFF1A1A2E),
-            ],
+            colors: [Color(0xFF0A0A0A), Color(0xFF1A1A2E)],
           ),
         ),
 
@@ -247,7 +211,6 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
 
           child: Column(
             children: [
-
               // ==================================================
               // NAVBAR
               // ==================================================
@@ -261,17 +224,9 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
               // ==================================================
               // NỘI DUNG + FOOTER
               // ==================================================
-
               Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-
-                      _buildContent(),
-
-                      const AppFooter(),
-                    ],
-                  ),
+                  child: Column(children: [_buildContent(), const AppFooter()]),
                 ),
               ),
             ],
@@ -288,21 +243,13 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   Widget _buildContent() {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: 1115,
-        ),
+        constraints: const BoxConstraints(maxWidth: 1115),
 
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            16,
-            34,
-            16,
-            40,
-          ),
+          padding: const EdgeInsets.fromLTRB(16, 34, 16, 40),
 
           child: Column(
             children: [
-
               // Tiêu đề
               _buildTitle(),
 
@@ -376,28 +323,16 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       runSpacing: 10,
 
       children: [
-        _legendItem(
-          const Color(0xFF444451),
-          'Còn trống',
-        ),
+        _legendItem(const Color(0xFF444451), 'Còn trống'),
 
-        _legendItem(
-          const Color(0xFFE50914),
-          'Đang chọn',
-        ),
+        _legendItem(const Color(0xFFE50914), 'Đang chọn'),
 
-        _legendItem(
-          const Color(0xFF1C1C1C),
-          'Đã bán/khóa',
-        ),
+        _legendItem(const Color(0xFF1C1C1C), 'Đã bán/khóa'),
       ],
     );
   }
 
-  Widget _legendItem(
-    Color color,
-    String text,
-  ) {
+  Widget _legendItem(Color color, String text) {
     return Row(
       mainAxisSize: MainAxisSize.min,
 
@@ -414,14 +349,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
 
         const SizedBox(width: 6),
 
-        Text(
-          text,
-
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-        ),
+        Text(text, style: const TextStyle(color: Colors.white, fontSize: 14)),
       ],
     );
   }
@@ -433,7 +361,6 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   Widget _buildCinemaLayout() {
     return Column(
       children: [
-
         // ======================================================
         // MÀN HÌNH
         // ======================================================
@@ -444,20 +371,12 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
 
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [
-                Color(0xFF1F1F1F),
-                Color(0xFF2B2B2B),
-              ],
+              colors: [Color(0xFF1F1F1F), Color(0xFF2B2B2B)],
             ),
 
             borderRadius: BorderRadius.circular(6),
 
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black54,
-                blurRadius: 12,
-              ),
-            ],
+            boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 12)],
           ),
         ),
 
@@ -479,23 +398,12 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
         // ======================================================
         // SƠ ĐỒ GHẾ
         // ======================================================
-
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
 
           child: Column(
             children: [
-
-              for (final row in [
-                'A',
-                'B',
-                'C',
-                'D',
-                'E',
-                'F',
-                'G',
-                'H',
-              ])
+              for (final row in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'])
                 _buildSeatRow(row),
             ],
           ),
@@ -512,15 +420,12 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
     final rowSeats = _getRowSeats(row);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 3,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 3),
 
       child: Row(
         mainAxisSize: MainAxisSize.min,
 
         children: [
-
           // Tên hàng
           SizedBox(
             width: 22,
@@ -540,19 +445,12 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           const SizedBox(width: 8),
 
           // Các ghế
-          for (
-            int i = 0;
-            i < rowSeats.length;
-            i++
-          ) ...[
-
+          for (int i = 0; i < rowSeats.length; i++) ...[
             // Khoảng cách giữa ghế 2 và 3
-            if (i == 2)
-              const SizedBox(width: 12),
+            if (i == 2) const SizedBox(width: 12),
 
             // Khoảng cách giữa ghế 8 và 9
-            if (i == rowSeats.length - 2)
-              const SizedBox(width: 12),
+            if (i == rowSeats.length - 2) const SizedBox(width: 12),
 
             _buildSeat(rowSeats[i]),
           ],
@@ -566,8 +464,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   // ============================================================
 
   Widget _buildSeat(Seat seat) {
-    final bool selected =
-        selectedSeats.contains(seat.code);
+    final bool selected = selectedSeats.contains(seat.code);
 
     Color seatColor;
 
@@ -575,12 +472,10 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
     if (seat.isUnavailable) {
       seatColor = const Color(0xFF1C1C1C);
     }
-
     // Đang chọn
     else if (selected) {
       seatColor = const Color(0xFFE50914);
     }
-
     // Còn trống
     else {
       seatColor = const Color(0xFF444451);
@@ -598,9 +493,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           message: seat.code,
 
           child: AnimatedContainer(
-            duration: const Duration(
-              milliseconds: 150,
-            ),
+            duration: const Duration(milliseconds: 150),
 
             width: 25,
             height: 20,
@@ -616,9 +509,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
               boxShadow: selected
                   ? [
                       BoxShadow(
-                        color: const Color(
-                          0xFFE50914,
-                        ).withOpacity(0.45),
+                        color: const Color(0xFFE50914).withOpacity(0.45),
 
                         blurRadius: 8,
                       ),
@@ -636,39 +527,25 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   // ============================================================
 
   Widget _buildSummary() {
-    final List<String> sortedSeats =
-        selectedSeats.toList()..sort();
+    final List<String> sortedSeats = selectedSeats.toList()..sort();
 
     return Container(
       width: double.infinity,
 
-      padding: const EdgeInsets.fromLTRB(
-        18,
-        18,
-        18,
-        18,
-      ),
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
 
       decoration: BoxDecoration(
         color: const Color(0xFF1C1C1C),
 
         borderRadius: BorderRadius.circular(8),
 
-        border: Border.all(
-          color: const Color(0xFF333333),
-        ),
+        border: Border.all(color: const Color(0xFF333333)),
 
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black38,
-            blurRadius: 10,
-          ),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black38, blurRadius: 10)],
       ),
 
       child: Column(
         children: [
-
           // ======================================================
           // TỔNG GHẾ + GIÁ
           // ======================================================
@@ -689,7 +566,6 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           // ======================================================
           // DANH SÁCH GHẾ
           // ======================================================
-
           if (sortedSeats.isNotEmpty) ...[
             const SizedBox(height: 8),
 
@@ -711,54 +587,38 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           // ======================================================
           // NÚT ĐẶT VÉ
           // ======================================================
-
           SizedBox(
             width: double.infinity,
 
             child: ElevatedButton(
               // Không có ghế -> disable
               // Có ghế -> chuyển sang FoodAndDrinkScreen
-              onPressed: selectedSeats.isEmpty
-                  ? null
-                  : _continueBooking,
+              onPressed: selectedSeats.isEmpty ? null : _continueBooking,
 
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    const Color(0xFFE50914),
+                backgroundColor: const Color(0xFFE50914),
 
-                disabledBackgroundColor:
-                    const Color(0xFF333333),
+                disabledBackgroundColor: const Color(0xFF333333),
 
-                foregroundColor:
-                    Colors.white,
+                foregroundColor: Colors.white,
 
-                disabledForegroundColor:
-                    Colors.white38,
+                disabledForegroundColor: Colors.white38,
 
-                padding:
-                    const EdgeInsets.symmetric(
-                  vertical: 14,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 14),
 
-                shape:
-                    RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
                 ),
 
                 elevation: 4,
 
-                shadowColor:
-                    const Color(0xFFE50914),
+                shadowColor: const Color(0xFFE50914),
               ),
 
               child: const Text(
                 'Đặt vé',
 
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
           ),

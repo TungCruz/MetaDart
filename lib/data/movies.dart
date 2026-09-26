@@ -12,8 +12,7 @@ final movies = <Movie>[
     duration: 110,
     language: 'Tiếng Nhật - Phụ đề Tiếng Việt; Lồng Tiếng Việt',
     rating: 'K',
-    description:
-        'Trên những ngọn núi tuyết của Nagano, một vụ án bí ẩn đã đưa Conan và các thám tử quay trở lại quá khứ. Thanh tra Yamato Kansuke - người đã bị thương nặng trong một trận tuyết lở nhiều năm trước - bất ngờ phải đối mặt với những ký ức đau thương của mình trong khi điều tra một vụ tấn công tại Đài quan sát Nobeyama. Cùng lúc đó, Mori Kogoro nhận được một cuộc gọi từ một đồng nghiệp cũ, tiết lộ mối liên hệ đáng ngờ giữa anh ta và vụ án đã bị lãng quên từ lâu. Sự xuất hiện của Morofushi Takaaki, cùng với những nhân vật chủ chốt như Amuro Tooru, Kazami và cảnh sát Tokyo, càng làm phức tạp thêm cuộc điều tra. Khi quá khứ và hiện tại đan xen, một bí ẩn rùng rợn dần dần được hé lộ - và ký ức của Kansuke nắm giữ chìa khóa cho mọi thứ.',
+    description: 'Trên những ngọn núi tuyết của Nagano, một vụ án bí ẩn đã đưa Conan và các thám tử quay trở lại quá khứ. Thanh tra Yamato Kansuke - người đã bị thương nặng trong một trận tuyết lở nhiều năm trước - bất ngờ phải đối mặt với những ký ức đau thương của mình trong khi điều tra một vụ tấn công tại Đài quan sát Nobeyama. Cùng lúc đó, Mori Kogoro nhận được một cuộc gọi từ một đồng nghiệp cũ, tiết lộ mối liên hệ đáng ngờ giữa anh ta và vụ án đã bị lãng quên từ lâu. Sự xuất hiện của Morofushi Takaaki, cùng với những nhân vật chủ chốt như Amuro Tooru, Kazami và cảnh sát Tokyo, càng làm phức tạp thêm cuộc điều tra. Khi quá khứ và hiện tại đan xen, một bí ẩn rùng rợn dần dần được hé lộ - và ký ức của Kansuke nắm giữ chìa khóa cho mọi thứ.',
     posterUrl: 'assets/images/conan.jpg',
     trailerUrl: 'https://youtu.be/5bKBCTpbTb4?si=52QAJrnuK8jShihT',
   ),
@@ -21,15 +20,13 @@ final movies = <Movie>[
     id: 2,
     title: '96 PHÚT SINH TỬ',
     director: 'Hồng Tử Huyên',
-    actors:
-        'Lâm Bách Hoành, Tống Vân Hoa, Vương Bá Kiệt, Lý Lý Nhân, Diêu Dĩ Đề, Thái Phàm Hi,…',
+    actors: 'Lâm Bách Hoành, Tống Vân Hoa, Vương Bá Kiệt, Lý Lý Nhân, Diêu Dĩ Đề, Thái Phàm Hi,…',
     genres: ['Hành Động', 'Tình cảm'],
     releaseDate: DateTime(2025, 12, 5),
     duration: 119,
     language: 'Phụ đề Tiếng Việt',
     rating: 'T16',
-    description:
-        'Một câu chuyện đầy căng thẳng với những lựa chọn sinh tử, nơi các nhân vật phải đối mặt với những thử thách khắc nghiệt và những bí mật không thể ngờ tới.',
+    description: 'Một câu chuyện đầy căng thẳng với những lựa chọn sinh tử, nơi các nhân vật phải đối mặt với những thử thách khắc nghiệt và những bí mật không thể ngờ tới.',
     posterUrl: 'assets/images/96phut.jpg',
     trailerUrl: 'https://youtu.be/MilLkfIAFWw?si=dMsq99SynyxAje6f',
   ),
@@ -43,8 +40,7 @@ final movies = <Movie>[
     duration: 104,
     language: 'Tiếng Anh - Phụ đề Tiếng Việt',
     rating: 'T16',
-    description:
-        'Những cơn ác mộng kinh hoàng tiếp tục trở lại. Các nhân vật phải tìm cách sống sót qua những đêm đầy nguy hiểm và khám phá những bí mật đáng sợ.',
+    description: 'Những cơn ác mộng kinh hoàng tiếp tục trở lại. Các nhân vật phải tìm cách sống sót qua những đêm đầy nguy hiểm và khám phá những bí mật đáng sợ.',
     posterUrl: 'assets/images/namdemkinhhoang.jpg',
     trailerUrl: 'https://youtu.be/HccJNOYMBjM?si=HVXfQA-uq6fEJHo5',
   ),
@@ -58,8 +54,7 @@ final movies = <Movie>[
     duration: 76,
     language: 'Tiếng Nhật - Phụ đề Tiếng Việt; Lồng Tiếng Việt',
     rating: 'T13',
-    description:
-        'Một câu chuyện tình cảm nhẹ nhàng kể về khoảng cách, thời gian và những con người từng bước đi qua cuộc đời nhau.',
+    description: 'Một câu chuyện tình cảm nhẹ nhàng kể về khoảng cách, thời gian và những con người từng bước đi qua cuộc đời nhau.',
     posterUrl: 'assets/images/5cm.png',
     trailerUrl: 'https://youtu.be/PjAcCzgg3pw?si=qDd0jJ_JHxSMZVuM',
   ),
@@ -73,8 +68,7 @@ final movies = <Movie>[
     duration: 107,
     language: 'Tiếng Anh - Phụ đề Tiếng Việt; Lồng tiếng Việt',
     rating: 'P',
-    description:
-        'Thế giới động vật Zootopia tiếp tục mở ra một cuộc phiêu lưu mới với những nhân vật quen thuộc và những thử thách mới.',
+    description: 'Thế giới động vật Zootopia tiếp tục mở ra một cuộc phiêu lưu mới với những nhân vật quen thuộc và những thử thách mới.',
     posterUrl: 'assets/images/zootopia.jpg',
     trailerUrl: 'https://youtu.be/4iWVnVg33Pc?si=UY6BgaJDuRlbUtdI',
   ),
@@ -82,15 +76,13 @@ final movies = <Movie>[
     id: 6,
     title: 'TRUY TÌM LONG DIÊN HƯƠNG',
     director: 'Dương Minh Chiến',
-    actors:
-        'Quang Tuấn, Ma Ran Đô, Nguyên Thảo, Hoàng Tóc Dài, NSND Thanh Nam và một số diễn viên khác',
+    actors: 'Quang Tuấn, Ma Ran Đô, Nguyên Thảo, Hoàng Tóc Dài, NSND Thanh Nam và một số diễn viên khác',
     genres: ['Hài'],
     releaseDate: DateTime(2028, 11, 14),
     duration: 103,
     language: 'Tiếng Việt',
     rating: 'T16',
-    description:
-        'Một hành trình hài hước với nhiều tình huống bất ngờ xoay quanh cuộc truy tìm Long Diên Hương.',
+    description: 'Một hành trình hài hước với nhiều tình huống bất ngờ xoay quanh cuộc truy tìm Long Diên Hương.',
     posterUrl: 'assets/images/truytimlongdienhuong.jpg',
     trailerUrl: 'https://youtu.be/-q1FYNMQBeU?si=k50ESm05twj7zjLJ',
   ),
@@ -104,11 +96,9 @@ final movies = <Movie>[
     duration: 99,
     language: 'Tiếng Indonesia, phụ đề tiếng Việt',
     rating: 'T18',
-    description:
-        'Một câu chuyện kinh dị xoay quanh những hiện tượng kỳ lạ xảy ra phía sau một bức tường.',
+    description: 'Một câu chuyện kinh dị xoay quanh những hiện tượng kỳ lạ xảy ra phía sau một bức tường.',
     posterUrl: 'assets/images/malungtuong.jpg',
-    trailerUrl:
-        'https://www.youtube.com/watch?v=W3MX-xMTivU&source_ve_path=MTc4NDI0&themeRefresh=1',
+    trailerUrl: 'https://www.youtube.com/watch?v=W3MX-xMTivU&source_ve_path=MTc4NDI0&themeRefresh=1',
   ),
   Movie(
     id: 8,
@@ -120,8 +110,7 @@ final movies = <Movie>[
     duration: 100,
     language: 'Tiếng Nhật – phụ đề Tiếng Việt',
     rating: 'T18',
-    description:
-        'Denji tiếp tục cuộc sống đầy nguy hiểm khi một nhân vật bí ẩn xuất hiện và kéo cậu vào một cuộc chiến mới.',
+    description: 'Denji tiếp tục cuộc sống đầy nguy hiểm khi một nhân vật bí ẩn xuất hiện và kéo cậu vào một cuộc chiến mới.',
     posterUrl: 'assets/images/chainsawman.jpg',
     trailerUrl: 'https://youtu.be/9JTsXUMA6eg?si=OLYKxfA6mPDxWRz1',
   ),
@@ -129,22 +118,19 @@ final movies = <Movie>[
     id: 9,
     title: 'HOÀNG TỬ QUỶ',
     director: 'Trần Hữu Tấn',
-    actors:
-        'Anh Tú Atus, Lương Thế Thành, Hoàng Linh Chi, Huỳnh Thanh Trực, Rima Thanh Vy, Lê Hà Phương, Duy Luân,...',
+    actors: 'Anh Tú Atus, Lương Thế Thành, Hoàng Linh Chi, Huỳnh Thanh Trực, Rima Thanh Vy, Lê Hà Phương, Duy Luân,...',
     genres: ['Kinh Dị'],
     releaseDate: DateTime(2028, 12, 5),
     duration: 117,
     language: 'Tiếng Việt',
     rating: 'T18',
-    description:
-        'Một câu chuyện kinh dị Việt Nam với những bí mật đen tối và những hiện tượng kỳ bí.',
+    description: 'Một câu chuyện kinh dị Việt Nam với những bí mật đen tối và những hiện tượng kỳ bí.',
     posterUrl: 'assets/images/hoangtuquy.jpg',
     trailerUrl: 'https://youtu.be/Rc-0s7oeON8?si=HgFmc9AT9oq8krEk',
   ),
   Movie(
     id: 10,
-    title:
-        'CHÚ THUẬT HỒI CHIẾN: BIẾN CỐ SHIBUYA X TỬ DIỆT HỒI DU - THE MOVIE',
+    title: 'CHÚ THUẬT HỒI CHIẾN: BIẾN CỐ SHIBUYA X TỬ DIỆT HỒI DU - THE MOVIE',
     director: 'Shouta Goshozono',
     actors: 'Gojo Satoru, Itadori Yuji',
     genres: ['Hoạt hình', 'Hành động'],
@@ -152,8 +138,7 @@ final movies = <Movie>[
     duration: 88,
     language: 'Tiếng Nhật - Phụ đề Tiếng Việt; Lồng Tiếng Việt',
     rating: 'T16',
-    description:
-        'Những trận chiến khốc liệt và những sự kiện quan trọng tiếp tục diễn ra trong thế giới Chú Thuật Hồi Chiến.',
+    description: 'Những trận chiến khốc liệt và những sự kiện quan trọng tiếp tục diễn ra trong thế giới Chú Thuật Hồi Chiến.',
     posterUrl: 'assets/images/chuthuathoichien.jpg',
     trailerUrl: 'https://youtu.be/EWKm0lolQRM?si=9PW5ULvFh-sxa2vt',
   ),

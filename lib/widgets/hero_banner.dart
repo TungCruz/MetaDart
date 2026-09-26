@@ -6,11 +6,7 @@ class HeroBanner extends StatelessWidget {
   final Movie movie;
   final VoidCallback onBooking;
 
-  const HeroBanner({
-    super.key,
-    required this.movie,
-    required this.onBooking,
-  });
+  const HeroBanner({super.key, required this.movie, required this.onBooking});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +26,7 @@ class HeroBanner extends StatelessWidget {
               movie.posterUrl,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) {
-                return Container(
-                  color: const Color(0xFF151515),
-                );
+                return Container(color: const Color(0xFF151515));
               },
             ),
           Container(
@@ -55,18 +49,12 @@ class HeroBanner extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                colors: [
-                  Color(0xD9000000),
-                  Colors.transparent,
-                ],
+                colors: [Color(0xD9000000), Colors.transparent],
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 50,
-              vertical: 50,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
             child: Align(
               alignment: Alignment.centerLeft,
               child: ConstrainedBox(
@@ -131,10 +119,7 @@ class HeroBanner extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFFE50914),
-                              Color(0xFFF40612),
-                            ],
+                            colors: [Color(0xFFE50914), Color(0xFFF40612)],
                           ),
                           borderRadius: BorderRadius.circular(6),
                           boxShadow: [

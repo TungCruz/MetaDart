@@ -18,30 +18,18 @@ class CheckoutScreen extends StatelessWidget {
     required this.foodOrders,
   });
 
-  int get seatTotal =>
-      selectedSeats.length * ticketPrice;
+  int get seatTotal => selectedSeats.length * ticketPrice;
 
-  int get foodTotal =>
-      foodOrders.fold(
-        0,
-        (sum, item) => sum + item.total,
-      );
+  int get foodTotal => foodOrders.fold(0, (sum, item) => sum + item.total);
 
-  int get grandTotal =>
-      seatTotal + foodTotal;
+  int get grandTotal => seatTotal + foodTotal;
 
   String _formatPrice(int price) {
-    return '${price.toString().replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (match) => '${match.group(1)}.',
-        )}đ';
+    return '${price.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => '${match.group(1)}.')}đ';
   }
 
   void _goHome(BuildContext context) {
-    Navigator.popUntil(
-      context,
-      (route) => route.isFirst,
-    );
+    Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   void _payment(BuildContext context) {
@@ -63,9 +51,7 @@ class CheckoutScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
               child: const Text(
                 'Đóng',
-                style: TextStyle(
-                  color: Color(0xFFE50914),
-                ),
+                style: TextStyle(color: Color(0xFFE50914)),
               ),
             ),
           ],
@@ -83,27 +69,19 @@ class CheckoutScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0A0A0A),
-              Color(0xFF1A1A2E),
-            ],
+            colors: [Color(0xFF0A0A0A), Color(0xFF1A1A2E)],
           ),
         ),
         child: SafeArea(
           bottom: false,
           child: Column(
             children: [
-              AppNavbar(
-                onHome: () => _goHome(context),
-              ),
+              AppNavbar(onHome: () => _goHome(context)),
 
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
-                    children: [
-                      _buildContent(context),
-                      const AppFooter(),
-                    ],
+                    children: [_buildContent(context), const AppFooter()],
                   ),
                 ),
               ),
@@ -117,16 +95,9 @@ class CheckoutScreen extends StatelessWidget {
   Widget _buildContent(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: 1100,
-        ),
+        constraints: const BoxConstraints(maxWidth: 1100),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            16,
-            55,
-            16,
-            55,
-          ),
+          padding: const EdgeInsets.fromLTRB(16, 55, 16, 55),
           child: Column(
             children: [
               const Text(
@@ -142,23 +113,15 @@ class CheckoutScreen extends StatelessWidget {
 
               LayoutBuilder(
                 builder: (context, constraints) {
-                  final desktop =
-                      constraints.maxWidth >= 700;
+                  final desktop = constraints.maxWidth >= 700;
 
                   if (desktop) {
                     return Row(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: _buildOrderSummary(
-                            context,
-                          ),
-                        ),
+                        Expanded(child: _buildOrderSummary(context)),
                         const SizedBox(width: 30),
-                        Expanded(
-                          child: _buildPayment(),
-                        ),
+                        Expanded(child: _buildPayment()),
                       ],
                     );
                   }
@@ -181,8 +144,7 @@ class CheckoutScreen extends StatelessWidget {
 
   Widget _buildOrderSummary(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'Tóm tắt đơn hàng',
@@ -203,8 +165,7 @@ class CheckoutScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 'Suất chiếu:',
@@ -218,16 +179,13 @@ class CheckoutScreen extends StatelessWidget {
 
               const Text(
                 '19:00 15/09/2026 | Phòng: Phòng 1',
-                style: TextStyle(
-                  color: Colors.white70,
-                ),
+                style: TextStyle(color: Colors.white70),
               ),
 
               const SizedBox(height: 22),
 
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Ghế:',
@@ -237,13 +195,10 @@ class CheckoutScreen extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () =>
-                        Navigator.pop(context),
+                    onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'Đổi ghế',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -251,9 +206,7 @@ class CheckoutScreen extends StatelessWidget {
 
               Text(
                 selectedSeats.join(', '),
-                style: const TextStyle(
-                  color: Colors.white70,
-                ),
+                style: const TextStyle(color: Colors.white70),
               ),
 
               const SizedBox(height: 18),
@@ -270,15 +223,10 @@ class CheckoutScreen extends StatelessWidget {
 
               Text(
                 _formatPrice(seatTotal),
-                style: const TextStyle(
-                  color: Colors.white70,
-                ),
+                style: const TextStyle(color: Colors.white70),
               ),
 
-              const Divider(
-                color: Colors.white24,
-                height: 30,
-              ),
+              const Divider(color: Colors.white24, height: 30),
 
               const Text(
                 'Đồ ăn & thức uống',
@@ -294,49 +242,33 @@ class CheckoutScreen extends StatelessWidget {
               if (foodOrders.isEmpty)
                 const Text(
                   'Không chọn đồ ăn/thức uống.',
-                  style: TextStyle(
-                    color: Colors.white54,
-                  ),
+                  style: TextStyle(color: Colors.white54),
                 ),
 
               for (final item in foodOrders)
                 Padding(
-                  padding:
-                      const EdgeInsets.only(
-                    bottom: 10,
-                  ),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment
-                            .spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
                           '${item.item.name} size ${item.size} x ${item.quantity}',
-                          style: const TextStyle(
-                            color: Colors.white70,
-                          ),
+                          style: const TextStyle(color: Colors.white70),
                         ),
                       ),
                       Text(
                         _formatPrice(item.total),
-                        style: const TextStyle(
-                          color: Colors.white70,
-                        ),
+                        style: const TextStyle(color: Colors.white70),
                       ),
                     ],
                   ),
                 ),
 
-              const Divider(
-                color: Colors.white24,
-                height: 30,
-              ),
+              const Divider(color: Colors.white24, height: 30),
 
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment
-                        .spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Tổng cộng:',
@@ -365,8 +297,7 @@ class CheckoutScreen extends StatelessWidget {
 
   Widget _buildPayment() {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'Chọn phương thức thanh toán',
@@ -391,24 +322,16 @@ class CheckoutScreen extends StatelessWidget {
               // handled in parent below
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  const Color(0xFFE50914),
+              backgroundColor: const Color(0xFFE50914),
               foregroundColor: Colors.white,
-              padding:
-                  const EdgeInsets.symmetric(
-                vertical: 15,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 15),
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(6),
               ),
             ),
             child: const Text(
               'Thanh toán qua Ngân hàng',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
           ),
         ),

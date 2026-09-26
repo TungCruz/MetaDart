@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+
 import '../models/movie.dart';
 
 class MovieCard extends StatefulWidget {
   final Movie movie;
   final VoidCallback onTap;
 
-  const MovieCard({
-    super.key,
-    required this.movie,
-    required this.onTap,
-  });
+  const MovieCard({super.key, required this.movie, required this.onTap});
 
   @override
   State<MovieCard> createState() => _MovieCardState();
@@ -30,19 +27,12 @@ class _MovieCardState extends State<MovieCard> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          transform: Matrix4.translationValues(
-            0,
-            hovering ? -8 : 0,
-            0,
-          ),
+          transform: Matrix4.translationValues(0, hovering ? -8 : 0, 0),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF1C1C1C),
-                Color(0xFF2A2A2A),
-              ],
+              colors: [Color(0xFF1C1C1C), Color(0xFF2A2A2A)],
             ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(

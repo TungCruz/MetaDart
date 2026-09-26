@@ -4,7 +4,6 @@ import '../app_routes.dart';
 import '../services/auth_service.dart';
 import '../widgets/app_shell.dart';
 import '../widgets/auth_widgets.dart';
-import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -19,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _accountController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _accountFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
   final _authService = AuthService();
   bool _obscurePassword = true;
   bool _submitting = false;
@@ -28,14 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _accountController.dispose();
     _passwordController.dispose();
+    _accountFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
   void _goHome() => Navigator.popUntil(context, (route) => route.isFirst);
-
-  void _openRegister() {
-    Navigator.pushReplacementNamed(context, RegisterScreen.routeName);
-  }
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
@@ -49,7 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
       final isAdmin = await _authService.isCurrentUserAdmin(forceRefresh: true);
       if (!mounted) return;
-      showAuthMessage(context, 'Đăng nhập thành công.');
       if (isAdmin) {
         Navigator.pushNamedAndRemoveUntil(
           context,
@@ -57,7 +55,17 @@ class _LoginScreenState extends State<LoginScreen> {
           (route) => route.isFirst,
         );
       } else {
-        _goHome();
+        final mustChangePassword = await _authService.mustChangePassword();
+        if (!mounted) return;
+        if (mustChangePassword) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRoutes.changePassword,
+            (route) => route.isFirst,
+          );
+        } else {
+          _goHome();
+        }
       }
     } catch (error) {
       if (!mounted) return;
@@ -93,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onHome: _goHome,
       onBack: _goHome,
       onLogin: () {},
-      onRegister: _openRegister,
+      onRegister: null,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 56, 16, 10),
         child: Column(
@@ -112,7 +120,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: 'Email hoặc tài khoản',
                       hint: 'Nhập email hoặc tài khoản',
                       icon: Icons.mail_outline,
+                      focusNode: _accountFocusNode,
+                      autofocus: true,
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
+                      enableSuggestions: false,
                       textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) =>
+                          _passwordFocusNode.requestFocus(),
                       validator: (value) {
                         final email = value?.trim() ?? '';
                         if (email.toLowerCase() == AuthService.adminUsername) {
@@ -130,8 +145,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: 'Mật khẩu',
                       hint: 'Nhập mật khẩu',
                       icon: Icons.lock_outline,
+                      focusNode: _passwordFocusNode,
                       obscureText: _obscurePassword,
+                      autocorrect: false,
+                      enableSuggestions: false,
                       textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => _submit(),
                       onToggleObscure: () {
                         setState(() => _obscurePassword = !_obscurePassword);
                       },
@@ -170,25 +189,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 22),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        const Text(
-                          'Chưa có tài khoản?',
-                          style: TextStyle(color: authMuted),
-                        ),
-                        TextButton(
-                          onPressed: _openRegister,
-                          child: const Text(
-                            'Đăng ký ngay',
-                            style: TextStyle(
-                              color: authRed,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ],
+                    const Text(
+                      'Tài khoản được cấp bởi quản trị viên MetaCinema.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: authMuted),
                     ),
                   ],
                 ),

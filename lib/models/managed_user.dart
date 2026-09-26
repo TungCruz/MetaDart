@@ -4,6 +4,8 @@ class ManagedUser {
   final String email;
   final String phone;
   final int age;
+  final String status;
+  final String role;
 
   const ManagedUser({
     required this.id,
@@ -11,5 +13,9 @@ class ManagedUser {
     required this.email,
     required this.phone,
     required this.age,
+    this.status = 'active',
+    this.role = 'user',
   });
+
+  bool get isActive => status == 'active';
 }

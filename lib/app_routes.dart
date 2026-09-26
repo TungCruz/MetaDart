@@ -4,4 +4,5 @@ abstract final class AppRoutes {
   static const profile = '/profile';
   static const adminDashboard = '/admin';
   static const adminUsers = '/admin/users';
+  static const changePassword = '/change-password';
 }

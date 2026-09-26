@@ -11,10 +11,7 @@ class AppFooter extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF151515),
-            Color(0xFF080808),
-          ],
+          colors: [Color(0xFF151515), Color(0xFF080808)],
         ),
       ),
       child: Center(
@@ -56,10 +53,7 @@ class AppFooter extends StatelessWidget {
                     return const Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          flex: 2,
-                          child: _BrandColumn(),
-                        ),
+                        Expanded(flex: 2, child: _BrandColumn()),
                         Expanded(
                           child: _FooterColumn(
                             title: 'LIÊN KẾT',
@@ -85,17 +79,11 @@ class AppFooter extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 40),
-                Container(
-                  height: 1,
-                  color: Colors.white.withOpacity(0.08),
-                ),
+                Container(height: 1, color: Colors.white.withOpacity(0.08)),
                 const SizedBox(height: 20),
                 Text(
                   '© ${DateTime.now().year} Meta Cinema. All rights reserved.',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 13,
-                  ),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                 ),
               ],
             ),
@@ -117,10 +105,7 @@ class _BrandColumn extends StatelessWidget {
         ShaderMask(
           shaderCallback: (bounds) {
             return const LinearGradient(
-              colors: [
-                Color(0xFFE50914),
-                Color(0xFFF40612),
-              ],
+              colors: [Color(0xFFE50914), Color(0xFFF40612)],
             ).createShader(bounds);
           },
           child: const Text(
@@ -150,10 +135,7 @@ class _FooterColumn extends StatelessWidget {
   final String title;
   final List<String> items;
 
-  const _FooterColumn({
-    required this.title,
-    required this.items,
-  });
+  const _FooterColumn({required this.title, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -174,10 +156,7 @@ class _FooterColumn extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 11),
             child: Text(
               item,
-              style: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 13,
-              ),
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
             ),
           ),
         ),

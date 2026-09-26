@@ -25,7 +25,16 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   final _service = AdminUserService();
   final _searchController = TextEditingController();
   final Set<String> _deletingIds = {};
+  final Set<String> _statusBusyIds = {};
+  late final Stream<List<ManagedUser>> _usersStream;
   String _search = '';
+  String? _operationMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _usersStream = _service.watchUsers();
+  }
 
   @override
   void dispose() {
@@ -43,6 +52,22 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     _showMessage(
       user == null ? 'Thêm người dùng thành công.' : 'Cập nhật thành công.',
     );
+  }
+
+  Future<void> _toggleUserStatus(ManagedUser user) async {
+    final nextStatus = user.isActive ? 'disabled' : 'active';
+    setState(() => _statusBusyIds.add(user.id));
+    try {
+      await _service.setUserStatus(user, nextStatus);
+      if (!mounted) return;
+      _showMessage(
+        nextStatus == 'active' ? 'Đã mở khóa tài khoản.' : 'Đã khóa tài khoản.',
+      );
+    } catch (error) {
+      if (mounted) _showMessage(_errorMessage(error));
+    } finally {
+      if (mounted) setState(() => _statusBusyIds.remove(user.id));
+    }
   }
 
   Future<void> _deleteUser(ManagedUser user) async {
@@ -91,8 +116,8 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    debugPrint('Admin users: $message');
+    if (mounted) setState(() => _operationMessage = message);
   }
 
   @override
@@ -100,16 +125,27 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     return AdminShell(
       title: 'Quản lý người dùng',
       currentRoute: AdminUsersScreen.routeName,
-      child: StreamBuilder<List<ManagedUser>>(
-        stream: _service.watchUsers(),
-        builder: (context, snapshot) {
-          return Column(
-            children: [
-              _toolbar(),
-              Expanded(child: _content(snapshot)),
-            ],
-          );
-        },
+      child: Column(
+        children: [
+          _toolbar(),
+          if (_operationMessage != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(22, 0, 22, 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _operationMessage!,
+                  style: const TextStyle(color: Colors.white70),
+                ),
+              ),
+            ),
+          Expanded(
+            child: StreamBuilder<List<ManagedUser>>(
+              stream: _usersStream,
+              builder: (context, snapshot) => _content(snapshot),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -206,7 +242,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             ? 'Chưa có người dùng'
             : 'Không tìm thấy kết quả',
         message: _search.isEmpty
-            ? 'Nhấn Thêm người dùng để tạo dữ liệu đầu tiên.'
+            ? 'Nhấn Thêm người dùng để tạo tài khoản đầu tiên.'
             : 'Thử tìm kiếm bằng từ khóa khác.',
       );
     }
@@ -221,121 +257,159 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 
   Widget _userRow(ManagedUser user) {
     final deleting = _deletingIds.contains(user.id);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-      decoration: BoxDecoration(
-        color: const Color(0xFF191919),
-        border: Border.all(color: const Color(0xFF303030)),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final identity = Row(
-            children: [
-              UserAvatar(userId: user.id, name: user.name, radius: 21),
-              const SizedBox(width: 13),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      user.email,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white54,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-          final actions = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                tooltip: 'Sửa',
-                onPressed: deleting ? null : () => _openEditor(user),
-                icon: const Icon(Icons.edit_outlined, color: Colors.white70),
-              ),
-              if (deleting)
-                const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Color(0xFFE50914),
-                    ),
-                  ),
-                )
-              else
-                IconButton(
-                  tooltip: 'Xóa',
-                  onPressed: () => _deleteUser(user),
-                  icon: const Icon(
-                    Icons.delete_outline,
-                    color: Color(0xFFFF6B72),
-                  ),
-                ),
-            ],
-          );
-
-          if (constraints.maxWidth < 640) {
-            return Column(
+    final changingStatus = _statusBusyIds.contains(user.id);
+    return InkWell(
+      borderRadius: BorderRadius.circular(6),
+      onTap: deleting || changingStatus ? null : () => _openEditor(user),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+        decoration: BoxDecoration(
+          color: const Color(0xFF191919),
+          border: Border.all(color: const Color(0xFF303030)),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final identity = Row(
               children: [
-                identity,
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '${user.phone} • ${user.age} tuổi',
+                UserAvatar(userId: user.id, name: user.name, radius: 21),
+                const SizedBox(width: 13),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        user.email,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.white54,
                           fontSize: 12,
                         ),
                       ),
-                    ),
-                    actions,
-                  ],
+                      const SizedBox(height: 3),
+                      Text(
+                        user.isActive ? 'Đang hoạt động' : 'Đã khóa',
+                        style: TextStyle(
+                          color: user.isActive
+                              ? const Color(0xFF66BB6A)
+                              : const Color(0xFFFFB74D),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             );
-          }
-          return Row(
-            children: [
-              Expanded(flex: 3, child: identity),
-              Expanded(
-                child: Text(
-                  user.phone,
-                  style: const TextStyle(color: Colors.white70),
+            final actions = Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (changingStatus)
+                  const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  )
+                else
+                  IconButton(
+                    tooltip: user.isActive ? 'Khóa tài khoản' : 'Mở khóa',
+                    onPressed: () => _toggleUserStatus(user),
+                    icon: Icon(
+                      user.isActive ? Icons.lock_outline : Icons.lock_open,
+                      color: user.isActive
+                          ? const Color(0xFFFFB74D)
+                          : const Color(0xFF66BB6A),
+                    ),
+                  ),
+                IconButton(
+                  tooltip: 'Sửa',
+                  onPressed: deleting || changingStatus
+                      ? null
+                      : () => _openEditor(user),
+                  icon: const Icon(Icons.edit_outlined, color: Colors.white70),
                 ),
-              ),
-              SizedBox(
-                width: 70,
-                child: Text(
-                  '${user.age} tuổi',
-                  style: const TextStyle(color: Colors.white70),
+                if (deleting)
+                  const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFFE50914),
+                      ),
+                    ),
+                  )
+                else
+                  IconButton(
+                    tooltip: 'Xóa',
+                    onPressed: () => _deleteUser(user),
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: Color(0xFFFF6B72),
+                    ),
+                  ),
+              ],
+            );
+
+            if (constraints.maxWidth < 640) {
+              return Column(
+                children: [
+                  identity,
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${user.phone} • ${user.age} tuổi',
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      actions,
+                    ],
+                  ),
+                ],
+              );
+            }
+            return Row(
+              children: [
+                Expanded(flex: 3, child: identity),
+                Expanded(
+                  child: Text(
+                    user.phone,
+                    style: const TextStyle(color: Colors.white70),
+                  ),
                 ),
-              ),
-              actions,
-            ],
-          );
-        },
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '${user.age} tuổi',
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                ),
+                actions,
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -499,6 +573,13 @@ class _UserEditorDialogState extends State<_UserEditorDialog> {
                   ),
                 ],
                 const SizedBox(height: 20),
+                if (!editing) ...[
+                  const Text(
+                    'Tài khoản đăng nhập sẽ được tạo với mật khẩu mặc định 123456 và người dùng phải đổi mật khẩu ở lần đăng nhập đầu.',
+                    style: TextStyle(color: Colors.white60),
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 AuthField(
                   controller: _nameController,
                   label: 'Họ và tên',

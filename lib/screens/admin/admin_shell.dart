@@ -40,9 +40,7 @@ class _AdminShellState extends State<AdminShell> {
       );
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(_authService.messageFor(error))));
+      debugPrint('Admin logout: ${_authService.messageFor(error)}');
     }
   }
 

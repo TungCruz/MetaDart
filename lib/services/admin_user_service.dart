@@ -1,32 +1,63 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/managed_user.dart';
 import 'user_profile_service.dart';
 
 class AdminUserService {
-  AdminUserService({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  AdminUserService({
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+    http.Client? client,
+    String? apiBaseUrl,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance,
+       _client = client ?? http.Client(),
+       _apiBaseUrl = apiBaseUrl ?? _defaultApiBaseUrl;
+
+  static const defaultPassword = '123456';
+  static String get _defaultApiBaseUrl {
+    const configuredApiBaseUrl = String.fromEnvironment('ADMIN_API_BASE_URL');
+    if (configuredApiBaseUrl.isNotEmpty) return configuredApiBaseUrl;
+    if (kIsWeb) return 'http://localhost:5055';
+    return defaultTargetPlatform == TargetPlatform.android
+        ? 'http://10.0.2.2:5055'
+        : 'http://localhost:5055';
+  }
 
   final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+  final http.Client _client;
+  final String _apiBaseUrl;
 
   Stream<List<ManagedUser>> watchUsers() {
-    return _firestore.collection('users').snapshots().map((snapshot) {
-      final users = snapshot.docs.map((doc) {
-        final data = doc.data();
-        return ManagedUser(
-          id: doc.id,
-          name: data['name'] as String? ?? '',
-          email: data['email'] as String? ?? '',
-          phone: data['phone'] as String? ?? '',
-          age: (data['age'] as num?)?.toInt() ?? 0,
-        );
-      }).toList();
-      users.sort(
-        (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-      );
-      return users;
-    });
+    return _firestore
+        .collection('users')
+        .snapshots()
+        .map((snapshot) {
+          final users = snapshot.docs.map((doc) {
+            final data = doc.data();
+            return ManagedUser(
+              id: doc.id,
+              name: data['name'] as String? ?? '',
+              email: data['email'] as String? ?? '',
+              phone: data['phone'] as String? ?? '',
+              age: (data['age'] as num?)?.toInt() ?? 0,
+              status: data['status'] as String? ?? 'active',
+              role: data['role'] as String? ?? 'user',
+            );
+          }).toList();
+          users.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+          );
+          return users;
+        })
+        .handleError((Object error, StackTrace stackTrace) {
+          _log('watchUsers', error, stackTrace);
+        });
   }
 
   Future<void> addUser({
@@ -38,36 +69,14 @@ class AdminUserService {
     String? avatarContentType,
   }) async {
     _validateAvatar(avatarBytes);
-    DocumentReference<Map<String, dynamic>>? createdReference;
-    try {
-      await _ensureEmailAvailable(email);
-      final reference = await _firestore.collection('users').add({
-        'name': name.trim(),
-        'email': email.trim().toLowerCase(),
-        'phone': phone.trim(),
-        'age': age,
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-      createdReference = reference;
-
-      final batch = _firestore.batch();
-      batch.update(reference, {'id': reference.id});
-      if (avatarBytes != null) {
-        _setAvatar(batch, reference.id, avatarBytes, avatarContentType);
-      }
-      await batch.commit();
-    } catch (error, stackTrace) {
-      _log('addUser', error, stackTrace);
-      if (createdReference != null) {
-        try {
-          await createdReference.delete();
-        } catch (rollbackError, rollbackStackTrace) {
-          _log('addUserRollback', rollbackError, rollbackStackTrace);
-        }
-      }
-      Error.throwWithStackTrace(error, stackTrace);
-    }
+    await _request('POST', '/api/admin/users', {
+      'name': name.trim(),
+      'email': email.trim().toLowerCase(),
+      'phone': phone.trim(),
+      'age': age,
+      'avatarBase64': avatarBytes == null ? null : base64Encode(avatarBytes),
+      'avatarContentType': avatarContentType,
+    });
   }
 
   Future<void> updateUser({
@@ -81,70 +90,70 @@ class AdminUserService {
     bool removeAvatar = false,
   }) async {
     _validateAvatar(avatarBytes);
-    try {
-      await _ensureEmailAvailable(email, exceptUserId: user.id);
-      final batch = _firestore.batch();
-      final userRef = _firestore.collection('users').doc(user.id);
-      batch.update(userRef, {
-        'id': user.id,
-        'name': name.trim(),
-        'email': email.trim().toLowerCase(),
-        'phone': phone.trim(),
-        'age': age,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-
-      final avatarRef = _firestore.collection('userAvatars').doc(user.id);
-      if (removeAvatar) {
-        batch.delete(avatarRef);
-      } else if (avatarBytes != null) {
-        _setAvatar(batch, user.id, avatarBytes, avatarContentType);
-      }
-      await batch.commit();
-    } catch (error, stackTrace) {
-      _log('updateUser', error, stackTrace);
-      Error.throwWithStackTrace(error, stackTrace);
-    }
-  }
-
-  Future<void> deleteUser(ManagedUser user) async {
-    try {
-      final batch = _firestore.batch();
-      batch.delete(_firestore.collection('users').doc(user.id));
-      batch.delete(_firestore.collection('userAvatars').doc(user.id));
-      await batch.commit();
-    } catch (error, stackTrace) {
-      _log('deleteUser', error, stackTrace);
-      Error.throwWithStackTrace(error, stackTrace);
-    }
-  }
-
-  void _setAvatar(
-    WriteBatch batch,
-    String userId,
-    Uint8List bytes,
-    String? contentType,
-  ) {
-    batch.set(_firestore.collection('userAvatars').doc(userId), {
-      'bytes': Blob(bytes),
-      'contentType': contentType ?? 'image/jpeg',
-      'updatedAt': FieldValue.serverTimestamp(),
+    await _request('PUT', '/api/admin/users/${user.id}', {
+      'name': name.trim(),
+      'email': email.trim().toLowerCase(),
+      'phone': phone.trim(),
+      'age': age,
+      'avatarBase64': avatarBytes == null ? null : base64Encode(avatarBytes),
+      'avatarContentType': avatarContentType,
+      'removeAvatar': removeAvatar,
     });
   }
 
-  Future<void> _ensureEmailAvailable(
-    String email, {
-    String? exceptUserId,
-  }) async {
-    final normalized = email.trim().toLowerCase();
-    final result = await _firestore
-        .collection('users')
-        .where('email', isEqualTo: normalized)
-        .limit(2)
-        .get();
-    final duplicate = result.docs.any((doc) => doc.id != exceptUserId);
-    if (duplicate) {
-      throw const AdminUserException('Email này đã tồn tại trong danh sách.');
+  Future<void> deleteUser(ManagedUser user) async {
+    await _request('DELETE', '/api/admin/users/${user.id}', null);
+  }
+
+  Future<void> setUserStatus(ManagedUser user, String status) async {
+    if (status != 'active' && status != 'disabled') {
+      throw const AdminUserException('Trạng thái tài khoản không hợp lệ.');
+    }
+    await _request('PATCH', '/api/admin/users/${user.id}/status', {
+      'status': status,
+    });
+  }
+
+  Future<void> _request(
+    String method,
+    String path,
+    Map<String, Object?>? body,
+  ) async {
+    try {
+      final token = await _auth.currentUser?.getIdToken();
+      if (token == null) {
+        throw const AdminUserException(
+          'Phiên đăng nhập admin đã hết hạn. Vui lòng đăng nhập lại.',
+        );
+      }
+      final request = http.Request(method, Uri.parse('$_apiBaseUrl$path'))
+        ..headers.addAll({
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        });
+      if (body != null) request.body = jsonEncode(body);
+      final response = await http.Response.fromStream(
+        await _client.send(request).timeout(const Duration(seconds: 20)),
+      );
+      if (response.statusCode >= 200 && response.statusCode < 300) return;
+
+      String message = 'Không thể thực hiện thao tác quản trị.';
+      try {
+        final decoded = jsonDecode(response.body) as Map<String, dynamic>;
+        message = decoded['message'] as String? ?? message;
+      } catch (_) {
+        if (response.statusCode == 401 || response.statusCode == 403) {
+          message = 'Tài khoản hiện tại không có quyền quản trị.';
+        }
+      }
+      throw AdminUserException(message);
+    } on AdminUserException {
+      rethrow;
+    } catch (error, stackTrace) {
+      _log(method, error, stackTrace);
+      throw const AdminUserException(
+        'Không kết nối được API quản trị. Hãy kiểm tra backend đang chạy.',
+      );
     }
   }
 

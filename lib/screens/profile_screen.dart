@@ -157,8 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    debugPrint('Profile: $message');
   }
 
   void _goHome() => Navigator.popUntil(context, (route) => route.isFirst);

@@ -81,7 +81,12 @@ class AuthField extends StatelessWidget {
   final String? Function(String?)? validator;
   final VoidCallback? onToggleObscure;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onFieldSubmitted;
   final bool enabled;
+  final bool autofocus;
+  final FocusNode? focusNode;
+  final bool autocorrect;
+  final bool enableSuggestions;
 
   const AuthField({
     super.key,
@@ -95,7 +100,12 @@ class AuthField extends StatelessWidget {
     this.validator,
     this.onToggleObscure,
     this.onChanged,
+    this.onFieldSubmitted,
     this.enabled = true,
+    this.autofocus = false,
+    this.focusNode,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
   });
 
   @override
@@ -103,29 +113,41 @@ class AuthField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Icon(icon, color: Colors.white70, size: 18),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: enabled ? () => focusNode?.requestFocus() : null,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              children: [
+                Icon(icon, color: Colors.white70, size: 18),
+                const SizedBox(width: 8),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
+          focusNode: focusNode,
+          autofocus: autofocus,
           enabled: enabled,
           obscureText: obscureText,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
+          autocorrect: autocorrect,
+          enableSuggestions: enableSuggestions,
           validator: validator,
           onChanged: onChanged,
+          onFieldSubmitted: onFieldSubmitted,
           style: const TextStyle(color: Colors.white),
           cursorColor: authRed,
           decoration: InputDecoration(
@@ -283,18 +305,19 @@ class AuthSocialButton extends StatelessWidget {
 }
 
 void showAuthMessage(BuildContext context, String message) {
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: const Color(0xFF272727),
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Đóng',
-          textColor: authRed,
-          onPressed: () {},
+  debugPrint('Auth: $message');
+  showDialog<void>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      backgroundColor: const Color(0xFF1B1B1B),
+      title: const Text('Không thể tiếp tục'),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(),
+          child: const Text('Đóng'),
         ),
-      ),
-    );
+      ],
+    ),
+  );
 }
